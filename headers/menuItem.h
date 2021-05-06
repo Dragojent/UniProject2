@@ -3,16 +3,19 @@
 
 #include <string>
 #include <galSubMenu.h>
+#include <any>
+#include <typeinfo>
 
 namespace gal
 {
-    class SubMenu;
+    template<class T>
     struct menuItem
     {
-        typedef int (*func)();
+        typedef int (*func)(T);
 
         std::string name;
-        func action;
+        func action; 
+        T item;
     };
 }
 

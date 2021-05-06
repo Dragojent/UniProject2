@@ -1,6 +1,6 @@
 #include <galUI.h>
 
-void gal::display(SubMenu& menu)
+void gal::display(SubMenu &menu)
 {
     unsigned int pos = 0;
     std::cout << menu.name() << std::endl;
@@ -14,7 +14,7 @@ void gal::display(SubMenu& menu)
     }
 }
 
-int gal::start(SubMenu& menu)
+int gal::start(SubMenu &menu)
 {
     system("cls");
     gal::display(menu);
@@ -23,9 +23,6 @@ int gal::start(SubMenu& menu)
 
     while (running)
     {
-        system("cls");
-        gal::display(menu);
-        input = getch();
         switch (input)
         {
             case 'w':
@@ -48,6 +45,9 @@ int gal::start(SubMenu& menu)
             default:
                 break;
         }
+        system("cls");
+        gal::display(menu);
+        input = getch();
     }
     return 1;
 }

@@ -1,12 +1,14 @@
 #include <galSubMenu.h>
 #include <iostream>
+#include <typeinfo>
+#include <galPhoto.h>
 
 using namespace gal;
 
 SubMenu::SubMenu() :
     m_name({}), m_items({}) {}
 
-SubMenu::SubMenu(std::string name, myArray<menuItem*> items) :
+SubMenu::SubMenu(std::string name, myArray<menuItem<Photo>*> items) :
     m_name(name), m_items(items){}
 
 SubMenu::SubMenu(SubMenu& menu) :
@@ -47,12 +49,12 @@ std::string SubMenu::name() const
     return m_name;
 }
 
-myArray<menuItem*> SubMenu::items() const
+myArray<menuItem<Photo>*> SubMenu::items() const
 {
     return m_items;
 }
 
 int SubMenu::run()
 {
-    return m_items[m_selector]->action();
+    return m_items[m_selector]->action(m_items[m_selector]->item);
 }

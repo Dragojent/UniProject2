@@ -4,6 +4,7 @@
 #include <string>
 #include <myArray.h>
 #include <menuItem.h>
+#include <galPhoto.h>
 
 namespace gal
 {
@@ -13,7 +14,7 @@ namespace gal
             typedef unsigned int position;
 
             SubMenu();
-            SubMenu(std::string name, myArray<menuItem*> items);
+            SubMenu(std::string name, myArray<menuItem<Photo>*> items);
             SubMenu(SubMenu& menu);
 
             void operator=(position pos);
@@ -22,14 +23,13 @@ namespace gal
 
             position selected() const;
             std::string name() const;
-            myArray<menuItem*> items() const;
+            myArray<menuItem<Photo>*> items() const;
 
             int run();
-            int run(SubMenu & menu);
 
         private:
             std::string m_name;
-            myArray<menuItem*> m_items;
+            myArray<menuItem<Photo>*> m_items;
             position m_selector = 0;
 
     };

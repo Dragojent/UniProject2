@@ -2,55 +2,38 @@
 #include <galMenu.h>
 #include <galUI.h>
 #include <menuItem.h>
+#include <galPhoto.h>
 
-int test1()
+int dis(gal::Photo photo)
 {
-    std::cout << "1" << std::endl;
-    return 1;
+    std::cout << photo.content << std::endl;
+    system("pause");
+    return 0;
 }
 
-int test2()
+int users(gal::Photo photo)
 {
-    std::cout << "2" << std::endl;
-    return 2;
-}
-
-int test3()
-{
-    std::cout << "3" << std::endl;
-    return 3;
+    for (auto user : photo.users)
+        std::cout << user << std::endl;
+    system("pause");
+    return 0;
 }
 
 int main()
 {
-    gal::menuItem
-        item1{"one", test1},
-        item2{"two", test2},
-        item3{"two", test2},
-        item4{"two", test2},
-        item5{"two", test2},
-        item6{"two", test2},
-        item7{"two", test2},
-        item8{"two", test2},
-        item9{"two", test2},
-        item10{"three", test3};
-
-    myArray<gal::menuItem*> arr{
-        &item1,
-        &item2,
-        &item3,
-        &item4,
-        &item5,
-        &item6,
-        &item7,
-        &item8,
-        &item9,
-        &item10
+    gal::Photo photo{"photo1", "__~+~__", {1, 2, 3}};
+    gal::menuItem<gal::Photo> it{"Photo1", dis, photo},
+                              it1{"photo1: users", users, photo};
+    myArray<gal::menuItem<gal::Photo>*> arr{
+        &it,
+        &it,
+        &it1,
+        &it1,
+        &it
     };
-    gal::SubMenu subMenu("menu", arr);
-    // gal::Menu menu("menu", {subMenu, subMenu, subMenu}, {"subMenu1", "subMenu2", "subMenu3"});
+    gal::SubMenu menu{"menu", arr};
 
-    gal::start(subMenu);
-    
+    gal::start(menu);
+
     return 0;
 }
