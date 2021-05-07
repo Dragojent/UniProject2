@@ -2,29 +2,30 @@
 #define GALUI_H
 
 #include <iostream>
-#include <galSubMenu.h>
+#include <galMenu.h>
 #include <conio.h>
 
 namespace gal
 {
     template <class T>
-    void display(SubMenu<T> &menu)
+    void display(GalMenu<T> &menu)
     {
         unsigned int pos = 0;
         std::cout << menu.name() << std::endl;
         for (auto item : menu.items())
         {
-            std::wcout << "-";
+            std::cout << "-";
             if (pos == menu.selected())
                 std::cout << "->";
-            std::cout << item->name << std::endl;
+            std::cout << item->name() << std::endl;
             pos++;
         }
     }
 
     template <class T>
-    int start(SubMenu<T> &menu)
+    int start(GalMenu<T> &menu)
     {
+        menu = 0;
         system("cls");
         gal::display(menu);
         bool running = true;
@@ -50,7 +51,7 @@ namespace gal
                     menu.run();
                     break;
 
-                case 27:
+                case 27 /*ESC*/:
                     running = false;
                     break;
 

@@ -4,14 +4,14 @@
 #include <galPhoto.h>
 #include <galManip.h>
 
-int dis(gal::Photo &photo)
+int dis(gal::photo &photo)
 {
     std::cout << photo.content << std::endl;
     system("pause");
     return 0;
 }
 
-int users(gal::Photo &photo)
+int users(gal::photo &photo)
 {
     for (auto user : photo.users)
         std::cout << user << std::endl;
@@ -19,37 +19,49 @@ int users(gal::Photo &photo)
     return 0;
 }
 
-using gal::Photo;
-using gal::menuItem;
-using gal::SubMenu;
+using gal::photo;
+using gal::MenuItem;
+using gal::GalMenu;
+
 int main()
 {
-    Photo photo{"photo1", "__~+~__", {1, 2, 3}};
-    menuItem<Photo> photoIt{"Photo1", dis, &photo},
-              photoIt1{"photo1: users", users, &photo};
-    myArray<menuItem<Photo>*> photoItems{
-        &photoIt,
+    photo photo{"photo1", "__~+~__", {1, 2, 3}};
+    MenuItem photoIt{"b", dis, &photo},
+                    photoIt1{"a", users, &photo},
+                    photoIt2{"c", users, &photo};
+
+    myArray photoItems{
         &photoIt,
         &photoIt1,
-        &photoIt1,
-        &photoIt
+        &photoIt2
     };
-    SubMenu<Photo> menu{"menu", photoItems};
+    GalMenu menu{"menu", photoItems};
 
-    menuItem<SubMenu<Photo>> menuPhotoIt{"sub Menu", gal::start<Photo>, &menu};
+    MenuItem menuPhotoIt{"sort", gal::sort, &menu};
+    MenuItem menuPhotoItStart{"sub Menu", gal::start, &menu};
+    MenuItem menuPhotoItAdd{"add", gal::add, &menu};
+    MenuItem menuPhotoItDel{"delete", gal::remove, &menu};
+    MenuItem menuPhotoItFil{"filter", gal::filter, &menu};
 
-    myArray<menuItem<SubMenu<Photo>>*> menuPhotoItems{
+    myArray menuPhotoItems{
         &menuPhotoIt,
-        &menuPhotoIt,
-        &menuPhotoIt,
-        &menuPhotoIt,
-        &menuPhotoIt,
-        &menuPhotoIt
+        &menuPhotoItStart,
+        &menuPhotoItAdd,
+        &menuPhotoItDel,
+        &menuPhotoItFil
     };
 
-    SubMenu<SubMenu<Photo>> mainMenu{"Main Menu", menuPhotoItems};
+    GalMenu mainMenu{"Main Menu", menuPhotoItems};
 
-    gal::start(mainMenu);
+    MenuItem MMitemStart{"another menu", gal::start, &mainMenu};
+    MenuItem MMitemDel{"delete item", gal::remove, &mainMenu};
+    myArray MMitems{
+        &MMitemStart,
+        &MMitemDel
+    };
+    GalMenu MM{"MM", MMitems};
+
+    gal::start(MM);
 
     return 0;
 }

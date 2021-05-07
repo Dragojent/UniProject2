@@ -6,7 +6,7 @@
 
 namespace gal
 {
-    struct Photo
+    struct photo
     {
         typedef std::string picture;
         typedef unsigned long userID;
