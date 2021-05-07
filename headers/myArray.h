@@ -30,7 +30,7 @@ class myArray
         myArray& operator=(const myArray &data);
 
     private:
-        size_t reserve();
+        size_t allocateMoreMem();
         T *m_content;
         size_t m_totalSize;
         size_t m_currentSize;
@@ -67,7 +67,7 @@ template <class T>
 size_t myArray<T>::push_back(T data)
 {
     if (m_currentSize == m_totalSize)
-        reserve();
+        allocateMoreMem();
     m_content[m_currentSize++] = data;
     return m_currentSize;
 }
@@ -86,7 +86,7 @@ void myArray<T>::insert(T data, size_t index)
     if (index >= m_currentSize)
         throw "Access Error: out of bounds";
     if (m_currentSize == m_totalSize)
-        reserve();
+        allocateMoreMem();
     m_currentSize++;
     for (int i = m_currentSize - 1; i > index; i--)
     {
@@ -102,7 +102,8 @@ T myArray<T>::erase(size_t index)
         throw "Access error: out of bounds";
     if (m_currentSize == 0)
         throw "Array is empty";
-    swap(index, m_currentSize - 1);
+    for (int i = index; i < m_currentSize; i++)
+        swap(i, i + 1);
     return m_content[--m_currentSize];
 }
 
@@ -175,7 +176,7 @@ myArray<T>& myArray<T>::operator=(const myArray<T> &data)
 }
 
 template <class T>
-size_t myArray<T>::reserve()
+size_t myArray<T>::allocateMoreMem()
 {
     T* old = m_content;
     m_content = new T[m_totalSize*=2];

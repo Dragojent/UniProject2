@@ -2,6 +2,7 @@
 #define GALMANIP_H
 
 #include <galMenu.h>
+#include <galPhoto.h>
 
 namespace gal
 {
@@ -19,7 +20,16 @@ namespace gal
     template <class T>
     int add(GalMenu<T> &menu)
     {
+        std::cout << "Enter a name for a new ";
+        if (typeid(T) == typeid(photo))
+            std::cout << "photo" << std::endl;
+        else if (typeid(T) == typeid(GalMenu<photo>))
+            std::cout << "album" << std::endl;
+        else 
+            std::cout << "item" << std::endl;
+        std::cout << ":";
         std::cin >> menu;
+        start(menu);
 
         return 0;
     }

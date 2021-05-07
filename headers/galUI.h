@@ -14,7 +14,7 @@ namespace gal
         std::cout << menu.name() << std::endl;
         for (auto item : menu.items())
         {
-            std::cout << "-";
+            std::cout << pos + 1 << ")";
             if (pos == menu.selected())
                 std::cout << "->";
             std::cout << item->name() << std::endl;

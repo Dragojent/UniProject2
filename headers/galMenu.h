@@ -97,10 +97,10 @@ namespace gal
     template <class T>
     std::istream& operator>>(std::istream &in, GalMenu<T> &menu)
     {
-        // std::string name;
-        // in >> name;
-        // static Photo* tmp = new Photo {name, "N/A", {}};
-        // menuItem<T> item{name, dis, tmp};
+        std::string name;
+        in >> name;
+        MenuItem<T> *item = new MenuItem<T>{name};
+        menu.add(*item);
         return in;
     }
 

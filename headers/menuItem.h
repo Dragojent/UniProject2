@@ -14,6 +14,7 @@ namespace gal
             
             MenuItem();
             MenuItem(std::string name, func action, T* item);
+            MenuItem(std::string name);
             MenuItem(MenuItem& item);
 
             std::string name() const;
@@ -32,6 +33,10 @@ namespace gal
     template <class T>
     MenuItem<T>::MenuItem(std::string name, func action, T* item) :
         m_name(name), m_action(action), m_item(item) {}
+
+    template <class T>
+    MenuItem<T>::MenuItem(std::string name) :
+        m_name(name), m_action(nullptr), m_item(nullptr) {}
 
     template <class T> 
     MenuItem<T>::MenuItem(MenuItem<T> &item) :

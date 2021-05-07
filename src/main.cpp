@@ -44,8 +44,8 @@ int main()
     MenuItem menuPhotoItFil{"filter", gal::filter, &menu};
 
     myArray menuPhotoItems{
-        &menuPhotoIt,
         &menuPhotoItStart,
+        &menuPhotoIt,
         &menuPhotoItAdd,
         &menuPhotoItDel,
         &menuPhotoItFil
