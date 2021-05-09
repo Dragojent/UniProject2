@@ -6,6 +6,8 @@
 #include <menuItem.h>
 #include <galPhoto.h>
 #include <galUI.h>
+#include <iterator>
+#include <cstddef>
 
 namespace gal
 {
@@ -16,7 +18,7 @@ namespace gal
             typedef unsigned int position;
 
             GalMenu();
-            GalMenu(std::string name, myArray<MenuItem<T>*> items);
+            GalMenu(std::string name, myArray<MenuItem<T>*> &items);
             GalMenu(GalMenu& menu);
 
             void operator=(position pos);
@@ -28,7 +30,7 @@ namespace gal
 
             position selected() const;
             std::string name() const;
-            myArray<MenuItem<T>*> items() const;
+            myArray<MenuItem<T>*>& items() const;
             unsigned int size() const;
             std::string nameOf(position index) const;
 
@@ -40,7 +42,7 @@ namespace gal
 
         private:
             std::string m_name;
-            myArray<MenuItem<T>*> m_items;
+            myArray<MenuItem<T>*> &m_items;
             position m_selector = 0;
 
     };
@@ -53,8 +55,8 @@ namespace gal
         m_name({}), m_items({}) {}
 
     template <class T>
-    GalMenu<T>::GalMenu(std::string name, myArray<MenuItem<T>*> items) :
-        m_name(name), m_items(items){}
+    GalMenu<T>::GalMenu(std::string name, myArray<MenuItem<T>*> &items) :
+        m_name(name), m_items(items) {}
 
     template <class T>
     GalMenu<T>::GalMenu(GalMenu<T>& menu) :
@@ -106,39 +108,27 @@ namespace gal
 
     template <class T>
     unsigned int GalMenu<T>::selected() const
-    {
-        return m_selector;
-    }
+    { return m_selector; }
 
     template <class T>
     std::string GalMenu<T>::name() const
-    {
-        return m_name;
-    }
+    { return m_name; }
 
     template <class T>
-    myArray<MenuItem<T>*> GalMenu<T>::items() const
-    {
-        return m_items;
-    }
+    myArray<MenuItem<T>*>& GalMenu<T>::items() const
+    { return m_items; }
 
     template <class T>
     unsigned int GalMenu<T>::size() const
-    {
-        return m_items.size();
-    }
+    { return m_items.size(); }
 
     template <class T>
     std::string GalMenu<T>::nameOf(position index) const
-    {
-        return m_items[index]->name();
-    }
+    { return m_items[index]->name(); }
 
     template <class T>
     int GalMenu<T>::run()
-    {
-        return m_items[m_selector]->action();
-    }
+    { return m_items[m_selector]->action(); }
 
     template <class T>
     void GalMenu<T>::swap(int a, int b) 
@@ -150,15 +140,11 @@ namespace gal
 
     template <class T>
     void GalMenu<T>::remove(unsigned int a)
-    {
-        m_items.erase(a);
-    }
+    { m_items.erase(a); }
 
     template <class T>
     void GalMenu<T>::add(MenuItem<T> &item)
-    {
-        m_items.push_back(&item);
-    }
+    { m_items.push_back(&item); }
 }
 
 #endif //GALSUBMENU_H

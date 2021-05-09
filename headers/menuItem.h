@@ -44,15 +44,11 @@ namespace gal
 
     template <class T>
     std::string MenuItem<T>::name() const
-    {
-        return m_name;
-    }
+    { return m_name; }
 
     template <class T>
     int MenuItem<T>::action()
-    {
-        return m_action(*m_item);
-    }
+    { return m_action(*m_item); }
 
 }
 

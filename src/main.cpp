@@ -3,65 +3,72 @@
 #include <menuItem.h>
 #include <galPhoto.h>
 #include <galManip.h>
-
-int dis(gal::photo &photo)
-{
-    std::cout << photo.content << std::endl;
-    system("pause");
-    return 0;
-}
-
-int users(gal::photo &photo)
-{
-    for (auto user : photo.users)
-        std::cout << user << std::endl;
-    system("pause");
-    return 0;
-}
+#include <galMIPhoto.h>
+#include <galPhotoManip.h>
+#include <galUser.h>
 
 using gal::photo;
 using gal::MenuItem;
 using gal::GalMenu;
+using gal::MIPhoto;
+using gal::User;
+
+
+void AddPhoto(std::string name, std::string content, myArray<User*> users, GalMenu<photo> &menu)
+{
+    photo *tmp = new photo{name, content, {1, 2, 3}};
+    MenuItem<photo> *tmpItem = new MenuItem{name, gal::view, tmp};
+    menu.add(*tmpItem);
+}
+
+GalMenu<photo> newAlbum(std::string name, photo &ph)
+{
+    MenuItem<photo> *photoIt = new MenuItem{ph.name, gal::view, &ph};
+    myArray<MenuItem<photo>*> *photoItems = new myArray{photoIt};
+    GalMenu menu{name, *photoItems};
+    return menu;
+}
+
+GalMenu<GalMenu<photo>> newGallery(std::string name, GalMenu<photo> &album)
+{
+    MenuItem<GalMenu<photo>> *galItem = new MenuItem{album.name(), gal::start, &album};
+    myArray<MenuItem<GalMenu<photo>>*> *galItems = new myArray{galItem};
+    GalMenu gallery{name, *galItems};
+    return gallery;
+}
+
+void AddAlbum(GalMenu<photo> &album, GalMenu<GalMenu<photo>> &gallery)
+{
+    MenuItem<GalMenu<photo>> *albItem = new MenuItem{album.name(), gal::start, &album};
+    gallery.add(*albItem);
+}
 
 int main()
 {
-    photo photo{"photo1", "__~+~__", {1, 2, 3}};
-    MenuItem photoIt{"b", dis, &photo},
-                    photoIt1{"a", users, &photo},
-                    photoIt2{"c", users, &photo};
+    User user1{"user1", User::AccessLevel::user},
+         user2{"user2", User::AccessLevel::user};
 
-    myArray photoItems{
-        &photoIt,
-        &photoIt1,
-        &photoIt2
-    };
-    GalMenu menu{"menu", photoItems};
-
-    MenuItem menuPhotoIt{"sort", gal::sort, &menu};
-    MenuItem menuPhotoItStart{"sub Menu", gal::start, &menu};
-    MenuItem menuPhotoItAdd{"add", gal::add, &menu};
-    MenuItem menuPhotoItDel{"delete", gal::remove, &menu};
-    MenuItem menuPhotoItFil{"filter", gal::filter, &menu};
-
-    myArray menuPhotoItems{
-        &menuPhotoItStart,
-        &menuPhotoIt,
-        &menuPhotoItAdd,
-        &menuPhotoItDel,
-        &menuPhotoItFil
+    myArray users{
+        &user1,
+        &user2
     };
 
-    GalMenu mainMenu{"Main Menu", menuPhotoItems};
+    photo ph{"photo1", "__~+~__", {1, 2, 3}};
+    GalMenu album = newAlbum("Album", ph);
+    AddPhoto("photo2", "=_=_=", users, album);
+    AddPhoto("photo3", "=~+~=", users, album);
+    AddPhoto("photo4", "=+-+=", users, album);
+    AddPhoto("photo5", "=-=-=", users, album);
+    AddPhoto("photo6", "=~=~=", users, album);
 
-    MenuItem MMitemStart{"another menu", gal::start, &mainMenu};
-    MenuItem MMitemDel{"delete item", gal::remove, &mainMenu};
-    myArray MMitems{
-        &MMitemStart,
-        &MMitemDel
-    };
-    GalMenu MM{"MM", MMitems};
+    GalMenu albumTwo = newAlbum("Album2", ph);
+    AddPhoto("kfd", "=~=~=", users, albumTwo);
 
-    gal::start(MM);
+    GalMenu gallery = newGallery("gallery", album);
+
+    AddAlbum(albumTwo, gallery);
+
+    gal::start(gallery);
 
     return 0;
 }

@@ -10,15 +10,13 @@ namespace gal
     template <class T>
     void display(GalMenu<T> &menu)
     {
-        unsigned int pos = 0;
         std::cout << menu.name() << std::endl;
-        for (auto item : menu.items())
+        for (int pos = 0; pos < menu.size(); pos++)
         {
             std::cout << pos + 1 << ")";
             if (pos == menu.selected())
                 std::cout << "->";
-            std::cout << item->name() << std::endl;
-            pos++;
+            std::cout << menu[pos]->name() << std::endl;
         }
     }
 
@@ -53,6 +51,10 @@ namespace gal
 
                 case 27 /*ESC*/:
                     running = false;
+                    break;
+
+                case 'q':
+                    exit(0);
                     break;
 
                 default:
