@@ -7,21 +7,20 @@
 
 namespace gal
 {
-    template <class T>
-    void display(GalMenu<T> &menu)
+    void display(GalMenu &menu)
     {
         std::cout << menu.name() << std::endl;
         for (int pos = 0; pos < menu.size(); pos++)
         {
-            std::cout << pos + 1 << ")";
+            if (pos >= 4)
+                std::cout << pos - 3 << ")";
             if (pos == menu.selected())
                 std::cout << "->";
-            std::cout << menu[pos]->name() << std::endl;
+            std::cout << menu.nameOf(pos) << std::endl;
         }
     }
 
-    template <class T>
-    int start(GalMenu<T> &menu)
+    int start(GalMenu &menu)
     {
         menu = 0;
         system("cls");

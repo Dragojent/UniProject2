@@ -3,44 +3,48 @@
 #include <menuItem.h>
 #include <galPhoto.h>
 #include <galManip.h>
-#include <galMIPhoto.h>
+#include <PointerItem.h>
 #include <galPhotoManip.h>
 #include <galUser.h>
 
 using gal::photo;
 using gal::MenuItem;
 using gal::GalMenu;
-using gal::MIPhoto;
+using gal::PointerItem;
 using gal::User;
 
-
-void AddPhoto(std::string name, std::string content, myArray<User*> users, GalMenu<photo> &menu)
+GalMenu* NewAlbum(photo &ph)
 {
-    photo *tmp = new photo{name, content, {1, 2, 3}};
-    MenuItem<photo> *tmpItem = new MenuItem{name, gal::view, tmp};
-    menu.add(*tmpItem);
-}
+    PointerItem<photo> *photoItem = new PointerItem{ph.name, gal::view, &ph};
 
-GalMenu<photo> newAlbum(std::string name, photo &ph)
-{
-    MenuItem<photo> *photoIt = new MenuItem{ph.name, gal::view, &ph};
-    myArray<MenuItem<photo>*> *photoItems = new myArray{photoIt};
-    GalMenu menu{name, *photoItems};
+    myArray<MenuItem*> items{
+        photoItem,
+    };
+
+    GalMenu *menu = new GalMenu{"menu", items};
+    PointerItem<GalMenu> *additem = new PointerItem{"Add Photo", gal::add, menu};
+    PointerItem<GalMenu> *removeitem = new PointerItem{"Delete Photo", gal::remove, menu};
+    PointerItem<GalMenu> *sortitem = new PointerItem{"Sort Album", gal::sort, menu};
+    PointerItem<GalMenu> *filteritem = new PointerItem{"Filter Album", gal::filter, menu};
+
+    menu->addOption(*additem);
+    menu->addOption(*removeitem);
+    menu->addOption(*sortitem);
+    menu->addOption(*filteritem);
+
     return menu;
 }
 
-GalMenu<GalMenu<photo>> newGallery(std::string name, GalMenu<photo> &album)
+template <class T>
+void AddItem(T &item, GalMenu &menu)
 {
-    MenuItem<GalMenu<photo>> *galItem = new MenuItem{album.name(), gal::start, &album};
-    myArray<MenuItem<GalMenu<photo>>*> *galItems = new myArray{galItem};
-    GalMenu gallery{name, *galItems};
-    return gallery;
+    PointerItem<T> *phItem = new PointerItem{item.name, gal::view, &item};
+    menu.add(*phItem);
 }
 
-void AddAlbum(GalMenu<photo> &album, GalMenu<GalMenu<photo>> &gallery)
+int Auth()
 {
-    MenuItem<GalMenu<photo>> *albItem = new MenuItem{album.name(), gal::start, &album};
-    gallery.add(*albItem);
+    return 0;
 }
 
 int main()
@@ -54,21 +58,14 @@ int main()
     };
 
     photo ph{"photo1", "__~+~__", {1, 2, 3}};
-    GalMenu album = newAlbum("Album", ph);
-    AddPhoto("photo2", "=_=_=", users, album);
-    AddPhoto("photo3", "=~+~=", users, album);
-    AddPhoto("photo4", "=+-+=", users, album);
-    AddPhoto("photo5", "=-=-=", users, album);
-    AddPhoto("photo6", "=~=~=", users, album);
+    photo pha{"abPhoto", "__~+~__", {1, 2, 3}};
+    photo phb{"babPhoto", "__~+~__", {1, 2, 3}};
 
-    GalMenu albumTwo = newAlbum("Album2", ph);
-    AddPhoto("kfd", "=~=~=", users, albumTwo);
+    GalMenu *menu = NewAlbum(ph);
+    AddItem(phb, *menu);
+    AddItem(pha, *menu);
 
-    GalMenu gallery = newGallery("gallery", album);
-
-    AddAlbum(albumTwo, gallery);
-
-    gal::start(gallery);
+    gal::start(*menu);
 
     return 0;
 }

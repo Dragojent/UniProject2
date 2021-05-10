@@ -60,7 +60,7 @@ myArray<T>::myArray(const myArray<T> &copy) :
 template <class T>
 myArray<T>::~myArray()
 {
-    delete[] m_content;
+   delete[] m_content;
 }
 
 template <class T>

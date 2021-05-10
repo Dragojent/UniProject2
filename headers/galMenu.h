@@ -11,26 +11,24 @@
 
 namespace gal
 {
-    template <class T>
     class GalMenu
     {
         public:
             typedef unsigned int position;
 
             GalMenu();
-            GalMenu(std::string name, myArray<MenuItem<T>*> &items);
+            GalMenu(std::string name, myArray<MenuItem*> items);
             GalMenu(GalMenu& menu);
 
             void operator=(position pos);
             position operator++(int);
             position operator--(int);
-            MenuItem<T>* operator[](position index) const;
-            template <class Y>
-            friend std::istream& operator>>(std::istream &in, GalMenu<Y> &menu); 
+            MenuItem* operator[](position index) const;
+            friend std::istream& operator>>(std::istream &in, GalMenu &menu); 
 
             position selected() const;
             std::string name() const;
-            myArray<MenuItem<T>*>& items() const;
+            myArray<MenuItem*> items() const;
             unsigned int size() const;
             std::string nameOf(position index) const;
 
@@ -38,11 +36,12 @@ namespace gal
 
             void swap(int a, int b);
             void remove(unsigned int a);
-            void add(MenuItem<T> &item);
+            void add(MenuItem &item);
+            void addOption(MenuItem &item);
 
         private:
             std::string m_name;
-            myArray<MenuItem<T>*> &m_items;
+            myArray<MenuItem*> m_items;
             position m_selector = 0;
 
     };
@@ -50,28 +49,23 @@ namespace gal
     #include <iostream>
     #include <typeinfo>
 
-    template <class T>
-    GalMenu<T>::GalMenu() :
+    GalMenu::GalMenu() :
         m_name({}), m_items({}) {}
 
-    template <class T>
-    GalMenu<T>::GalMenu(std::string name, myArray<MenuItem<T>*> &items) :
+    GalMenu::GalMenu(std::string name, myArray<MenuItem*> items) :
         m_name(name), m_items(items) {}
 
-    template <class T>
-    GalMenu<T>::GalMenu(GalMenu<T>& menu) :
+    GalMenu::GalMenu(GalMenu& menu) :
         m_name(menu.name()), m_items(menu.items()) {}
 
-    template <class T>
-    void GalMenu<T>::operator=(position pos)
+    void GalMenu::operator=(position pos)
     {
         if (pos > m_items.size())
             throw "Selector out of bounds";
         m_selector = pos;
     }
 
-    template <class T>
-    unsigned int GalMenu<T>::operator++(int)
+    unsigned int GalMenu::operator++(int)
     {
         if (m_selector >= m_items.size() - 1)
             m_selector = 0;
@@ -80,8 +74,7 @@ namespace gal
         return m_selector;
     }
 
-    template <class T>
-    unsigned int GalMenu<T>::operator--(int)
+    unsigned int GalMenu::operator--(int)
     {
         if (m_selector < 1)
             m_selector = m_items.size() - 1;
@@ -90,61 +83,53 @@ namespace gal
         return m_selector;
     }
 
-    template <class T>
-    MenuItem<T>* GalMenu<T>::operator[](position index) const
+    MenuItem* GalMenu::operator[](position index) const
     {
         return m_items[index];
     }
 
-    template <class T>
-    std::istream& operator>>(std::istream &in, GalMenu<T> &menu)
+    std::istream& operator>>(std::istream &in, GalMenu &menu)
     {
         std::string name;
         in >> name;
-        MenuItem<T> *item = new MenuItem<T>{name};
+        MenuItem *item = new MenuItem{name};
         menu.add(*item);
         return in;
     }
 
-    template <class T>
-    unsigned int GalMenu<T>::selected() const
+    unsigned int GalMenu::selected() const
     { return m_selector; }
 
-    template <class T>
-    std::string GalMenu<T>::name() const
+    std::string GalMenu::name() const
     { return m_name; }
 
-    template <class T>
-    myArray<MenuItem<T>*>& GalMenu<T>::items() const
+    myArray<MenuItem*> GalMenu::items() const
     { return m_items; }
 
-    template <class T>
-    unsigned int GalMenu<T>::size() const
+    unsigned int GalMenu::size() const
     { return m_items.size(); }
 
-    template <class T>
-    std::string GalMenu<T>::nameOf(position index) const
+    std::string GalMenu::nameOf(position index) const
     { return m_items[index]->name(); }
 
-    template <class T>
-    int GalMenu<T>::run()
+    int GalMenu::run()
     { return m_items[m_selector]->action(); }
 
-    template <class T>
-    void GalMenu<T>::swap(int a, int b) 
+    void GalMenu::swap(int a, int b) 
     {
-        MenuItem<T>* tmp = m_items[a];
+        MenuItem* tmp = m_items[a];
         m_items[a] = m_items[b];
         m_items[b] = tmp;
     }
 
-    template <class T>
-    void GalMenu<T>::remove(unsigned int a)
+    void GalMenu::remove(unsigned int a)
     { m_items.erase(a); }
 
-    template <class T>
-    void GalMenu<T>::add(MenuItem<T> &item)
+    void GalMenu::add(MenuItem &item)
     { m_items.push_back(&item); }
+
+    void GalMenu::addOption(MenuItem &item)
+    { m_items.insert(&item, m_items.size() - 1); }
 }
 
 #endif //GALSUBMENU_H

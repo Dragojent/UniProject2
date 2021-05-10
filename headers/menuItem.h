@@ -6,49 +6,43 @@
 
 namespace gal
 {
-    template<class T>
     class MenuItem
     {
         public:
-            typedef int (*func)(T&);
+            typedef int (*func)();
             
             MenuItem();
-            MenuItem(std::string name, func action, T* item);
+            MenuItem(std::string name, func action);
             MenuItem(std::string name);
             MenuItem(MenuItem& item);
 
             std::string name() const;
-            int action();
+            virtual int action();
+
+        protected:
+            std::string m_name;
 
         private:
-            std::string m_name;
             func m_action; 
-            T* m_item;
     };
 
-    template<class T>
-    MenuItem<T>::MenuItem() :
-        m_name({}), m_action(nullptr), m_item(nullptr) {}
+    MenuItem::MenuItem() :
+        m_name({}), m_action(nullptr) {}
     
-    template <class T>
-    MenuItem<T>::MenuItem(std::string name, func action, T* item) :
-        m_name(name), m_action(action), m_item(item) {}
+    MenuItem::MenuItem(std::string name, func action) :
+        m_name(name), m_action(action) {}
 
-    template <class T>
-    MenuItem<T>::MenuItem(std::string name) :
-        m_name(name), m_action(nullptr), m_item(nullptr) {}
+    MenuItem::MenuItem(std::string name) :
+        m_name(name), m_action(nullptr) {}
 
-    template <class T> 
-    MenuItem<T>::MenuItem(MenuItem<T> &item) :
-        m_name(item.name()), m_action(item.m_action), m_item(item.m_item) {}
+    MenuItem::MenuItem(MenuItem &item) :
+        m_name(item.name()), m_action(item.m_action) {}
 
-    template <class T>
-    std::string MenuItem<T>::name() const
+    std::string MenuItem::name() const
     { return m_name; }
 
-    template <class T>
-    int MenuItem<T>::action()
-    { return m_action(*m_item); }
+    int MenuItem::action()
+    { return m_action(); }
 
 }
 
