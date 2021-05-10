@@ -1,8 +1,12 @@
 #ifndef GALMANIP_H
 #define GALMANIP_H
 
-#include <galMenu.h>
 #include <galPhoto.h>
+#include <galManip.h>
+#include <galUI.h>
+#include <PointerItem.h>
+#include <galPhotoManip.h>
+#include <menuItem.h>
 
 namespace gal
 {
@@ -10,7 +14,7 @@ namespace gal
     {
         int size = menu.size();
         for (int i = 4; i < size - 1; i++)
-            for (int j = 4; j < size - i - 1; j++)
+            for (int j = 4; j < size - 1; j++)
                 if (menu.nameOf(j) > menu.nameOf(j + 1))
                     menu.swap(j, j + 1);
         return 0;
@@ -18,15 +22,33 @@ namespace gal
 
     int add(GalMenu &menu)
     {
+        display(menu);
         std::cout << "Enter a name for a new ";
-        // if (typeid(T) == typeid(photo))
-        //     std::cout << "photo" << std::endl;
-        // else if (typeid(T) == typeid(GalMenu))
-        //     std::cout << "album" << std::endl;
-        // else 
-        std::cout << "item" << std::endl;
-        std::cout << ":";
-        std::cin >> menu;
+        if (menu.type() == GalMenu::MenuType::album)
+            std::cout << "photo";
+        if (menu.type() == GalMenu::MenuType::gallery)
+            std::cout << "album";
+        else
+            std::cout << "item";
+        std::cout << "\n:";
+
+        std::string name;
+        std::cin >> name;
+        if (menu.type() == GalMenu::MenuType::album)
+        {
+            photo *ph = new photo{name, "", {1}};
+            PointerItem<photo> *MItem = new PointerItem{ph->name, view, ph};
+            menu.add(*MItem);
+        }
+        else if (menu.type() == GalMenu::MenuType::gallery)
+        {
+            photo *ph = new photo{name, "", {1}};
+            PointerItem<photo> *MItem = new PointerItem{name, view, ph};
+            myArray<MenuItem*> items{MItem};
+            GalMenu *newmenu = new GalMenu{name, items, GalMenu::MenuType::album};
+            PointerItem<GalMenu> *MMItem = new PointerItem{name, start, newmenu};
+            menu.add(*MItem);
+        }
         // start(menu);
 
         return 0;
@@ -67,12 +89,13 @@ namespace gal
         for (int i = 4; i <= tmpMenu->size(); i++)
             if (menu.nameOf(i).compare(0, key.length(), key))
             {
-                remove(*tmpMenu, i - shift);
+                gal::remove(*tmpMenu, i - shift);
                 shift++;
             }
         start(*tmpMenu);
         return 0;
     }
 }
+
 
 #endif //GALMAINP_H

@@ -1,17 +1,22 @@
 #ifndef GALUI_H
 #define GALUI_H
 
+#include <globals.h>
 #include <iostream>
 #include <galMenu.h>
 #include <conio.h>
 
+
 namespace gal
 {
+    class User;
     void display(GalMenu &menu)
     {
-        std::cout << menu.name() << std::endl;
+        std::cout << menu.name() << "    Logged in as: " << currentUser->name() << "\n" << std::endl;
         for (int pos = 0; pos < menu.size(); pos++)
         {
+            if (pos == 4)
+                std::cout << std::endl;
             if (pos >= 4)
                 std::cout << pos - 3 << ")";
             if (pos == menu.selected())

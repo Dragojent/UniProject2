@@ -1,71 +1,79 @@
+#include <globals.h>
+#include <list>
 #include <iostream>
+#include <galUser.h>
 #include <galUI.h>
+#include <galMenu.h>
 #include <menuItem.h>
 #include <galPhoto.h>
-#include <galManip.h>
 #include <PointerItem.h>
 #include <galPhotoManip.h>
-#include <galUser.h>
+#include <galManip.h>
+#include <galMenuManager.h>
 
-using gal::photo;
-using gal::MenuItem;
-using gal::GalMenu;
-using gal::PointerItem;
-using gal::User;
+using namespace gal;
 
-GalMenu* NewAlbum(photo &ph)
+int reg()
 {
-    PointerItem<photo> *photoItem = new PointerItem{ph.name, gal::view, &ph};
+    std::string login{}, password{}, name{};
+    std::cout << "Name: ";
+    std::cin >> name;
+    std::cout << "Login: ";
+    std::cin >> login;
+    std::cout << "Password: ";
+    std::cin >> password;
 
-    myArray<MenuItem*> items{
-        photoItem,
+    User newUser{name, password, login, User::AccessLevel::user};
+    UserBase.push_back(newUser);
+
+    return 0;
+}
+
+int login(GalMenu &menu)
+{
+    std::string login{}, password{};
+    std::cout << "Login: ";
+    std::cin >> login;
+    std::cout << "Password: ";
+    std::cin >> password;
+
+    for (User &user : UserBase)
+        if (login == user.login() && password == user.password())
+        {
+            currentUser = &user;
+            gal::start(menu);
+            currentUser = &Unauthorized;
+        }
+    return 0;
+}
+
+GalMenu* CreateAuthScreen(GalMenu &menu)
+{
+    PointerItem<GalMenu> *log = new PointerItem{"Login", login, &menu};
+    MenuItem *pas = new MenuItem{"Register", reg};
+
+    myArray<MenuItem*> MItems{
+        log,
+        pas
     };
 
-    GalMenu *menu = new GalMenu{"menu", items};
-    PointerItem<GalMenu> *additem = new PointerItem{"Add Photo", gal::add, menu};
-    PointerItem<GalMenu> *removeitem = new PointerItem{"Delete Photo", gal::remove, menu};
-    PointerItem<GalMenu> *sortitem = new PointerItem{"Sort Album", gal::sort, menu};
-    PointerItem<GalMenu> *filteritem = new PointerItem{"Filter Album", gal::filter, menu};
-
-    menu->addOption(*additem);
-    menu->addOption(*removeitem);
-    menu->addOption(*sortitem);
-    menu->addOption(*filteritem);
-
-    return menu;
-}
-
-template <class T>
-void AddItem(T &item, GalMenu &menu)
-{
-    PointerItem<T> *phItem = new PointerItem{item.name, gal::view, &item};
-    menu.add(*phItem);
-}
-
-int Auth()
-{
-    return 0;
+    GalMenu *authScreen = new GalMenu{"Auth Screen", MItems, GalMenu::MenuType::auth};
+    return authScreen;
 }
 
 int main()
 {
-    User user1{"user1", User::AccessLevel::user},
-         user2{"user2", User::AccessLevel::user};
-
-    myArray users{
-        &user1,
-        &user2
-    };
-
     photo ph{"photo1", "__~+~__", {1, 2, 3}};
     photo pha{"abPhoto", "__~+~__", {1, 2, 3}};
     photo phb{"babPhoto", "__~+~__", {1, 2, 3}};
 
-    GalMenu *menu = NewAlbum(ph);
-    AddItem(phb, *menu);
-    AddItem(pha, *menu);
+    GalMenu *album = NewMenu("Album_1", ph);
+    AddItem(phb, *album);
+    AddItem(pha, *album);
+    GalMenu *gallery = NewMenu("Gallery", *album);
+    GalMenu *authScreen = CreateAuthScreen(*gallery);
 
-    gal::start(*menu);
+    gal::start(*authScreen);
 
     return 0;
 }

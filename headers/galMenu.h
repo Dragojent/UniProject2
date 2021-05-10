@@ -4,20 +4,25 @@
 #include <string>
 #include <myArray.h>
 #include <menuItem.h>
-#include <galPhoto.h>
-#include <galUI.h>
-#include <iterator>
-#include <cstddef>
+// #include <galPhoto.h>
+// #include <galUI.h>
+// #include <iterator>
+// #include <cstddef>
 
 namespace gal
 {
     class GalMenu
     {
         public:
+            enum MenuType{
+                gallery = 0,
+                album = 1,
+                auth = 2
+            };
             typedef unsigned int position;
 
             GalMenu();
-            GalMenu(std::string name, myArray<MenuItem*> items);
+            GalMenu(std::string name, myArray<MenuItem*> items, MenuType type);
             GalMenu(GalMenu& menu);
 
             void operator=(position pos);
@@ -31,6 +36,7 @@ namespace gal
             myArray<MenuItem*> items() const;
             unsigned int size() const;
             std::string nameOf(position index) const;
+            MenuType type() const;
 
             int run();
 
@@ -43,7 +49,7 @@ namespace gal
             std::string m_name;
             myArray<MenuItem*> m_items;
             position m_selector = 0;
-
+            MenuType m_type;
     };
 
     #include <iostream>
@@ -52,11 +58,11 @@ namespace gal
     GalMenu::GalMenu() :
         m_name({}), m_items({}) {}
 
-    GalMenu::GalMenu(std::string name, myArray<MenuItem*> items) :
-        m_name(name), m_items(items) {}
+    GalMenu::GalMenu(std::string name, myArray<MenuItem*> items, MenuType type) :
+        m_name(name), m_items(items), m_type(type) {}
 
     GalMenu::GalMenu(GalMenu& menu) :
-        m_name(menu.name()), m_items(menu.items()) {}
+        m_name(menu.name()), m_items(menu.items()), m_type(menu.type()) {}
 
     void GalMenu::operator=(position pos)
     {
@@ -90,10 +96,6 @@ namespace gal
 
     std::istream& operator>>(std::istream &in, GalMenu &menu)
     {
-        std::string name;
-        in >> name;
-        MenuItem *item = new MenuItem{name};
-        menu.add(*item);
         return in;
     }
 
@@ -111,6 +113,9 @@ namespace gal
 
     std::string GalMenu::nameOf(position index) const
     { return m_items[index]->name(); }
+
+    GalMenu::MenuType GalMenu::type() const
+    { return m_type; }
 
     int GalMenu::run()
     { return m_items[m_selector]->action(); }
