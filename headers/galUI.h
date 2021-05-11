@@ -12,13 +12,25 @@ namespace gal
     class User;
     void display(GalMenu &menu)
     {
+        int shift{};
+        if (menu.type() == GalMenu::MenuType::album)
+            shift = 4;
+        if (menu.type() == GalMenu::MenuType::gallery)
+            shift = 4;
+        if (menu.type() == GalMenu::MenuType::noActions)
+            shift = 0;
+
+        std::cout << "Use 'w' and 's' to move up and down" << std::endl;
+        std::cout << "Press ESC to move up a menu" << std::endl;
+        std::cout << "Press SPACE to choose an option" << std::endl;
+        std::cout << "Press 'q' to exit the program\n" << std::endl;
         std::cout << menu.name() << "    Logged in as: " << currentUser->name() << "\n" << std::endl;
         for (int pos = 0; pos < menu.size(); pos++)
         {
-            if (pos == 4)
+            if (pos == shift)
                 std::cout << std::endl;
-            if (pos >= 4)
-                std::cout << pos - 3 << ")";
+            if (pos >= shift)
+                std::cout << pos - (shift - 1) << ")";
             if (pos == menu.selected())
                 std::cout << "->";
             std::cout << menu.nameOf(pos) << std::endl;

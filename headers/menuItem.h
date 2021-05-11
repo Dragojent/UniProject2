@@ -18,6 +18,7 @@ namespace gal
 
             std::string name() const;
             virtual int action();
+            virtual void edit();
 
         protected:
             std::string m_name;
@@ -43,6 +44,8 @@ namespace gal
 
     int MenuItem::action()
     { return m_action(); }
+
+    void MenuItem::edit() {}
 
 }
 

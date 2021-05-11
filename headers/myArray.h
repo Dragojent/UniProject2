@@ -16,7 +16,7 @@ class myArray
         size_t push_back(T data);
         T pop_back();
         void insert(T data, size_t index);
-        T erase(size_t index);
+        size_t erase(size_t index);
         void swap(int a, int b);
         void clear();
 
@@ -96,15 +96,16 @@ void myArray<T>::insert(T data, size_t index)
 }
 
 template <class T>
-T myArray<T>::erase(size_t index)
+size_t myArray<T>::erase(size_t index)
 {
     if (index >= m_currentSize)
         throw "Access error: out of bounds";
     if (m_currentSize == 0)
         throw "Array is empty";
-    for (int i = index; i < m_currentSize; i++)
-        swap(i, i + 1);
-    return m_content[--m_currentSize];
+    if (m_currentSize != 1)
+        for (int i = index; i < m_currentSize; i++)
+            swap(i, i + 1);
+    return --m_currentSize;
 }
 
 template <class T>

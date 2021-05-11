@@ -17,7 +17,8 @@ namespace gal
             enum MenuType{
                 gallery = 0,
                 album = 1,
-                auth = 2
+                auth = 2,
+                noActions = 3
             };
             typedef unsigned int position;
 
@@ -42,8 +43,11 @@ namespace gal
 
             void swap(int a, int b);
             void remove(unsigned int a);
+            void remove();
             void add(MenuItem &item);
             void addOption(MenuItem &item);
+            void edit(unsigned int pos);
+            void setType(MenuType type);
 
         private:
             std::string m_name;
@@ -130,11 +134,24 @@ namespace gal
     void GalMenu::remove(unsigned int a)
     { m_items.erase(a); }
 
+    void GalMenu::remove()
+    { m_items.erase(m_selector); }
+
     void GalMenu::add(MenuItem &item)
     { m_items.push_back(&item); }
 
     void GalMenu::addOption(MenuItem &item)
     { m_items.insert(&item, m_items.size() - 1); }
+
+    void GalMenu::edit(unsigned int pos)
+    {
+        m_items[pos]->edit();
+    }
+    
+    void GalMenu::setType(MenuType type)
+    {
+        m_type = type;
+    }
 }
 
 #endif //GALSUBMENU_H

@@ -20,39 +20,6 @@ namespace gal
         return 0;
     }
 
-    int add(GalMenu &menu)
-    {
-        display(menu);
-        std::cout << "Enter a name for a new ";
-        if (menu.type() == GalMenu::MenuType::album)
-            std::cout << "photo";
-        if (menu.type() == GalMenu::MenuType::gallery)
-            std::cout << "album";
-        else
-            std::cout << "item";
-        std::cout << "\n:";
-
-        std::string name;
-        std::cin >> name;
-        if (menu.type() == GalMenu::MenuType::album)
-        {
-            photo *ph = new photo{name, "", {1}};
-            PointerItem<photo> *MItem = new PointerItem{ph->name, view, ph};
-            menu.add(*MItem);
-        }
-        else if (menu.type() == GalMenu::MenuType::gallery)
-        {
-            photo *ph = new photo{name, "", {1}};
-            PointerItem<photo> *MItem = new PointerItem{name, view, ph};
-            myArray<MenuItem*> items{MItem};
-            GalMenu *newmenu = new GalMenu{name, items, GalMenu::MenuType::album};
-            PointerItem<GalMenu> *MMItem = new PointerItem{name, start, newmenu};
-            menu.add(*MItem);
-        }
-        // start(menu);
-
-        return 0;
-    }
 
     int add(GalMenu &menu, MenuItem &item)
     {
@@ -81,18 +48,73 @@ namespace gal
 
     int filter(GalMenu &menu)
     {
+        display(menu);
         std::cout << "Enter filter key\n:";
         std::string key{};
         std::cin >> key;
         int shift = 0;
         GalMenu *tmpMenu = new GalMenu(menu);
-        for (int i = 4; i <= tmpMenu->size(); i++)
-            if (menu.nameOf(i).compare(0, key.length(), key))
+        tmpMenu->setType(GalMenu::MenuType::noActions);
+        int size = tmpMenu->size();
+        for (int i = 0; i < size; i++)
+        {
+            if (i < 4 || (tmpMenu->nameOf(i - shift).compare(0, key.length(), key)))
             {
-                gal::remove(*tmpMenu, i - shift);
+                tmpMenu->remove(i - shift);
                 shift++;
             }
-        start(*tmpMenu);
+        }
+        if (tmpMenu->size() != 0)
+            start(*tmpMenu);
+        else
+        {
+            system("cls");
+            std::cout << "Pattern not found" << std::endl;
+            system("pause");
+        }
+        return 0;
+    }
+
+    int add(GalMenu &menu)
+    {
+        display(menu);
+        std::cout << "Enter a name for a new ";
+        if (menu.type() == GalMenu::MenuType::album)
+            std::cout << "photo";
+        if (menu.type() == GalMenu::MenuType::gallery)
+            std::cout << "album";
+        else
+            std::cout << "item";
+        std::cout << "\n:";
+
+        std::string name;
+        std::cin >> name;
+        if (menu.type() == GalMenu::MenuType::album)
+        {
+            photo *ph = new photo{name, "", {1}};
+            PointerItem<photo> *MItem = new PointerItem{ph->name, view, ph};
+            menu.add(*MItem);
+        }
+        else if (menu.type() == GalMenu::MenuType::gallery)
+        {
+            photo *ph = new photo{name, "", {1}};
+            PointerItem<photo> *MItem = new PointerItem{name, view, ph};
+            myArray<MenuItem*> items{MItem};
+            GalMenu *newmenu = new GalMenu{name, items, GalMenu::MenuType::album};
+            newmenu->remove(0);
+            PointerItem<GalMenu> *MMItem = new PointerItem{name, start, newmenu};
+            PointerItem<GalMenu> *additem = new PointerItem{"Add Photo", add, newmenu};
+            PointerItem<GalMenu> *removeitem = new PointerItem{"Delete Photo", remove, newmenu};
+            PointerItem<GalMenu> *sortitem = new PointerItem{"Sort Album", sort, newmenu};
+            PointerItem<GalMenu> *filteritem = new PointerItem{"Filter Album", filter, newmenu};
+
+            newmenu->add(*additem);
+            newmenu->add(*removeitem);
+            newmenu->add(*sortitem);
+            newmenu->add(*filteritem);
+            menu.add(*MMItem);
+        }
+
         return 0;
     }
 }
