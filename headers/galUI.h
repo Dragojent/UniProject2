@@ -14,9 +14,9 @@ namespace gal
     {
         int shift{};
         if (menu.type() == GalMenu::MenuType::album)
-            shift = 4;
+            shift = 5;
         if (menu.type() == GalMenu::MenuType::gallery)
-            shift = 4;
+            shift = 5;
         if (menu.type() == GalMenu::MenuType::noActions)
             shift = 0;
 

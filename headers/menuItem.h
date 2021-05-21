@@ -17,8 +17,10 @@ namespace gal
             MenuItem(MenuItem& item);
 
             std::string name() const;
+
             virtual int action();
             virtual void edit();
+            virtual void setName(std::string name);
 
         protected:
             std::string m_name;
@@ -45,7 +47,11 @@ namespace gal
     int MenuItem::action()
     { return m_action(); }
 
-    void MenuItem::edit() {}
+    void MenuItem::edit() 
+    { std::cout << "You shouldn't be here" << std::endl; }
+
+    void MenuItem::setName(std::string name) 
+    { m_name = name; }
 
 }
 

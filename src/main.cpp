@@ -16,9 +16,9 @@ using namespace gal;
 
 int main()
 {
-    photo ph{"photo1", "__~+~__", {1, 2, 3}};
-    photo pha{"abPhoto", "__~+~__", {1, 2, 3}};
-    photo phb{"babPhoto", "__~+~__", {1, 2, 3}};
+    Photo ph{"photo1", "__~+~__", {1, 2, 3}};
+    Photo pha{"abPhoto", "__~+~__", {1, 2, 3}};
+    Photo phb{"babPhoto", "__~+~__", {1, 2, 3}};
 
     GalMenu *album = NewMenu("Album_1", ph);
     AddItem(phb, *album);

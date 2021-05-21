@@ -9,7 +9,7 @@
 #include <galPhotoManip.h>
 #include <galAuthFunc.h>
 
-using gal::photo;
+using gal::Photo;
 using gal::MenuItem;
 using gal::GalMenu;
 using gal::PointerItem;
@@ -33,18 +33,20 @@ namespace gal
         PointerItem<GalMenu> *removeitem = new PointerItem{"Delete Album", gal::remove, menu};
         PointerItem<GalMenu> *sortitem = new PointerItem{"Sort Gallery", gal::sort, menu};
         PointerItem<GalMenu> *filteritem = new PointerItem{"Filter Gallery", gal::filter, menu};
+        PointerItem<GalMenu> *edititem = new PointerItem{"Edit Album", gal::edit, menu};
 
         menu->add(*additem);
         menu->add(*removeitem);
         menu->add(*sortitem);
         menu->add(*filteritem);
+        menu->add(*edititem);
 
         return menu;
     }
 
-    GalMenu* NewMenu(std::string name, photo &item)
+    GalMenu* NewMenu(std::string name, Photo &item)
     {
-        PointerItem<photo> *photoItem = new PointerItem{item.name, gal::view, &item};
+        PointerItem<Photo> *photoItem = new PointerItem{item.name(), gal::view, &item};
 
         myArray<MenuItem*> items{
             photoItem,
@@ -55,13 +57,13 @@ namespace gal
         PointerItem<GalMenu> *removeitem = new PointerItem{"Delete Photo", gal::remove, menu};
         PointerItem<GalMenu> *sortitem = new PointerItem{"Sort Album", gal::sort, menu};
         PointerItem<GalMenu> *filteritem = new PointerItem{"Filter Album", gal::filter, menu};
-        // PointerItem<GalMenu> *edititem = new PointerItem{"Edit Album", gal::edit, menu};
+        PointerItem<GalMenu> *edititem = new PointerItem{"Edit Photo", gal::edit, menu};
 
         menu->addOption(*additem);
         menu->addOption(*removeitem);
         menu->addOption(*sortitem);
         menu->addOption(*filteritem);
-        // menu->addOption(*edititem);
+        menu->addOption(*edititem);
 
         return menu;
     }
@@ -72,9 +74,9 @@ namespace gal
         menu.add(*MItem);
     }
 
-    void AddItem(photo &item, GalMenu &menu)
+    void AddItem(Photo &item, GalMenu &menu)
     {
-        PointerItem<photo> *MItem = new PointerItem{item.name, gal::view, &item};
+        PointerItem<Photo> *MItem = new PointerItem{item.name(), gal::view, &item};
         menu.add(*MItem);
     }
 

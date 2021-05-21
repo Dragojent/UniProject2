@@ -16,6 +16,7 @@ namespace gal
 
             int action();
             void edit();
+            void setName(std::string name);
 
         private:
             T* m_item;
@@ -36,23 +37,12 @@ namespace gal
     { return m_action(*m_item); }
 
     template <class T>
-    void PointerItem<T>::edit() {}
+    void PointerItem<T>::edit() 
+    { m_item->edit(); m_name = m_item->name(); }
 
-    template <> 
-    void PointerItem<photo>::edit()
-    {
-        std::cout << m_item->name << std::endl;
-        std::cout << m_item->content << std::endl;
-        for (auto user : m_item->users)
-            std::cout << user;
-        std::cout << std::endl;
-        std::cout << "Enter new photo" << std::endl;
-        std::cout << "Name: ";
-        std::cin >> m_item->name;
-        std::cout << "Image: ";
-        std::cin >> m_item->content;
-    }
+    template <class T>
+    void PointerItem<T>::setName(std::string name)
+    { m_name = name; }
 
-} 
-
+}
 #endif //POINTERITEM_H

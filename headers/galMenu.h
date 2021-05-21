@@ -4,10 +4,6 @@
 #include <string>
 #include <myArray.h>
 #include <menuItem.h>
-// #include <galPhoto.h>
-// #include <galUI.h>
-// #include <iterator>
-// #include <cstddef>
 
 namespace gal
 {
@@ -47,6 +43,7 @@ namespace gal
             void add(MenuItem &item);
             void addOption(MenuItem &item);
             void edit(unsigned int pos);
+            void edit();
             void setType(MenuType type);
 
         private:
@@ -143,15 +140,19 @@ namespace gal
     void GalMenu::addOption(MenuItem &item)
     { m_items.insert(&item, m_items.size() - 1); }
 
-    void GalMenu::edit(unsigned int pos)
-    {
-        m_items[pos]->edit();
+    void GalMenu::edit()
+    { 
+        std::cout << "Edit new name\n:";
+        std::string name;
+        std::cin >> name;
+        m_name = name;
     }
+
+    void GalMenu::edit(unsigned int pos)
+    { m_items[pos]->edit(); }
     
     void GalMenu::setType(MenuType type)
-    {
-        m_type = type;
-    }
+    { m_type = type; }
 }
 
 #endif //GALSUBMENU_H
