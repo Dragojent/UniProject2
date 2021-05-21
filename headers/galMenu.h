@@ -4,6 +4,7 @@
 #include <string>
 #include <myArray.h>
 #include <menuItem.h>
+#include <galException.h>
 
 namespace gal
 {
@@ -68,7 +69,7 @@ namespace gal
     void GalMenu::operator=(position pos)
     {
         if (pos > m_items.size())
-            throw "Selector out of bounds";
+            throw galException("Access error: out of bounds");
         m_selector = pos;
     }
 
@@ -91,14 +92,10 @@ namespace gal
     }
 
     MenuItem* GalMenu::operator[](position index) const
-    {
-        return m_items[index];
-    }
+    { return m_items[index]; }
 
     std::istream& operator>>(std::istream &in, GalMenu &menu)
-    {
-        return in;
-    }
+    { return in; }
 
     unsigned int GalMenu::selected() const
     { return m_selector; }

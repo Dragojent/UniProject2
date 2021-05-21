@@ -5,6 +5,8 @@
 #include <iostream>
 #include <galMenu.h>
 #include <conio.h>
+#include <exception>
+#include <galException.h>
 
 
 namespace gal
@@ -62,7 +64,8 @@ namespace gal
                 
                 case ' ':
                     system("cls");
-                    menu.run();
+                    try { menu.run(); }
+                    catch (const std::exception &exc) { std::cout << exc.what() << std::endl; system("pause"); }
                     break;
 
                 case 27 /*ESC*/:

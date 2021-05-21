@@ -166,8 +166,6 @@ T& myArray<T>::operator[](const size_t index) const
 template <class T>
 myArray<T>& myArray<T>::operator=(const myArray<T> &data)
 {
-    if (data.m_content == nullptr)
-        throw "Access Error: null reference";
     delete[] m_content;
     m_content = new T[data.size()];
     std::copy(data.begin(), data.end(), m_content);

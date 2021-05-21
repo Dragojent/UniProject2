@@ -7,6 +7,7 @@
 #include <PointerItem.h>
 #include <galPhotoManip.h>
 #include <menuItem.h>
+#include <galException.h>
 
 namespace gal
 {
@@ -30,6 +31,8 @@ namespace gal
 
     int remove(GalMenu &menu)
     {
+        if (menu.size() == 5 && (menu.type() == GalMenu::MenuType::album || menu.type() == GalMenu::MenuType::gallery))
+            throw galException("Modifying empty menu");
         display(menu);
         std::cout << "Delete which item?\n:";
         unsigned int pos;
@@ -42,12 +45,17 @@ namespace gal
 
     int remove(GalMenu &menu, unsigned int pos)
     {
+        if (menu.size() == 5 && (menu.type() == GalMenu::MenuType::album || menu.type() == GalMenu::MenuType::gallery))
+            throw galException("Modifying empty menu");
         menu.remove(pos);
         return 0;
     }
 
     int filter(GalMenu &menu)
     {
+        if (menu.size() == 5 && (menu.type() == GalMenu::MenuType::album || menu.type() == GalMenu::MenuType::gallery))
+            throw galException("Modifying empty menu");
+
         display(menu);
         std::cout << "Enter filter key\n:";
         std::string key{};
@@ -77,6 +85,8 @@ namespace gal
 
     int edit(GalMenu &menu)
     {
+        if (menu.size() == 5 && (menu.type() == GalMenu::MenuType::album || menu.type() == GalMenu::MenuType::gallery))
+            throw galException("Modifying empty menu");
         gal::display(menu);
         std::cout << "Edit which ";
         if (menu.type() == GalMenu::MenuType::album)
